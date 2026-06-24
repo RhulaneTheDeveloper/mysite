@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View My Reports</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* General Styles */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, rgb(54, 79, 90), rgb(9, 119, 167));
+            color: #333;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px 40px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            margin: 0;
+        }
+
+        nav ul li {
+            margin: 0;
+        }
+
+        nav ul li a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #007bff;
+        }
+
+        .profile-container {
+            position: relative;
+        }
+
+        .profile-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #007bff;
+            color: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .profile-button:hover {
+            background: #0056b3;
+        }
+
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            z-index: 1000;
+            min-width: 160px;
+        }
+
+        .profile-dropdown a {
+            display: block;
+            padding: 12px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .profile-dropdown a:hover {
+            background: #007bff;
+            color: white;
+        }
+
+        .profile-container:hover .profile-dropdown {
+            display: block;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #007bff;
+            font-size: 28px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #e6f0ff;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #a71d2a;
+        }
+
+        .btn-view {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background-color: #138496;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 80%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #007bff;
+        }
+
+        .modal-body {
+            margin-top: 15px;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .btn-close {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-close:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-view-modal {
+            background-color: cadetblue;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-view-modal:hover {
+            background-color: #5f7f8f;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>CIRS</h1>
+        <nav>
+            <ul>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/reportIncident.html">Report Incident</a></li>
+                <li><a href="/logout.html">Logout</a></li>
+            </ul>
+        </nav>
+        <div class="profile-container">
+            <button class="profile-button">{{ session['email'][0] }}</button>
+            <div class="profile-dropdown">
+                <a href="/profile.html">Update Profile</a>
+                <a href="/logout.html">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>My Reported Incidents</h2>
+
+        <!-- Table displaying reports -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Incident ID</th>
+                    <th>Ticket ID</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in reports %}
+                    <tr>
+                        <td>{{ report.incident_id }}</td>
+                        <td>{{ report.ticket_id }}</td>
+                        <td>{{ report.category }}</td>
+                        <td>{{ report.description }}</td>
+                        <td>{{ report.created_at }}</td>
+                        <td>
+                            <form action="{{ url_for('delete_incident') }}" method="POST" style="display:inline;" onsubmit="return confirmDelete();">
+                                <input type="hidden" name="incident_id" value="{{ report.incident_id }}">
+                                <button type="submit" class="btn btn-delete">Delete</button>
+                            </form>
+                            <form action="{{ url_for('view_a_report') }}" method="POST" style="display:inline;">
+                                <input type="hidden" name="incident_id" value="{{ report.incident_id }}">
+                                <button type="submit" style="background-color:cadetblue; color:white; border:none; padding:5px 10px; border-radius:5px;">View</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal for View Report -->
+    <div class="modal" id="reportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Report Details</h3>
+            </div>
+            <div class="modal-body">
+                <p><strong>Incident ID:</strong> <span id="modalIncidentID"></span></p>
+                <p><strong>Category:</strong> <span id="modalCategory"></span></p>
+                <p><strong>Description:</strong> <span id="modalDescription"></span></p>
+                <p><strong>Created At:</strong> <span id="modalCreatedAt"></span></p>
+                <p><strong>Location:</strong> <span id="modalLocation"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-view-modal">View</button>
+                <button class="btn btn-close" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(incident_id, category, description, created_at, lat, lon) {
+            // Populate modal fields
+            document.getElementById('modalIncidentID').innerText = incident_id;
+            document.getElementById('modalCategory').innerText = category;
+            document.getElementById('modalDescription').innerText = description;
+            document.getElementById('modalCreatedAt').innerText = created_at;
+            document.getElementById('modalLocation').innerText = `Latitude: ${lat}, Longitude: ${lon}`;
+
+            // Show modal
+            document.getElementById('reportModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('reportModal').style.display = 'none';
+        }
+
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete this report?');
+        }
+    </script>
+
+</body>
+</html>

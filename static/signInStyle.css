@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* Reset and General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Body */
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, rgb(54, 79, 90), rgb(9, 119, 167));
+    display: flex;
+    position: relative;
+    overflow-x: hidden; /* Prevents horizontal overflow, allows vertical scroll */
+    justify-content: center;
+    flex-direction: column;
+    min-height: 100vh; /* Allows content to expand page */
+    padding-top: 80px; /* Prevents overlap with fixed header */
+}
+
+/* Navigation Links and General Styling */
+li, a {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: white;
+    text-decoration: none;
+    background-color: rgb(1, 33, 44);
+}
+
+/* Header (Navigation Bar) */
+#header1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10%;
+    color: white;
+    background-color: rgb(3, 52, 69);
+    position: fixed; /* Stays at the top */
+    top: 0;
+    width: 100%; /* Full width */
+    z-index: 1000; /* Stays above other content */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+#nameLogo {
+    cursor: pointer;
+    font-size: 1.5rem; /* Matches your <h1> usage */
+    font-weight: bold;
+}
+
+.navLinks {
+    list-style: none;
+}
+
+.navLinks li {
+    display: inline-block;
+    padding: 7px 20px;
+    border-radius: 7px;
+}
+
+.navLinks li a {
+    transition: all 0.3s ease 0s;
+    display: block; /* Makes the entire link area clickable */
+}
+
+.navLinks li a:hover:not(.activeA) {
+    color: rgb(18, 161, 209);
+}
+
+.activeA, .activeL {
+    background-color: rgb(18, 161, 209);
+}
+
+/* Main Container */
+.container {
+    margin: 40px 20%; /* Adjusted margin-top to clear the nav */
+    background-color: white;
+    border-radius: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+    position: relative;
+    overflow: hidden;
+    width: 768px;
+    max-width: 100%;
+    min-height: 380px;
+}
+
+/* Form Container */
+.form-container.sign-in {
+    position: relative;
+    top: 0;
+    height: 100%;
+    transition: all 0.6s ease-in-out;
+}
+
+.container span {
+    font-size: 12px;
+    font-weight: 500;
+    color: #333; /* Adjusted for readability on white background */
+}
+
+/* Form Styling */
+.container form {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 40px;
+    height: 100%;
+}
+
+.container form h1 {
+    margin-top: 50px;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.container input {
+    background-color: #eee;
+    border: none;
+    margin: 8px 0;
+    padding: 10px 15px;
+    font-size: 14px; /* Increased from 8px for better readability */
+    border-radius: 8px;
+    width: 50%;
+    outline: none;
+}
+
+/* Buttons */
+.container button {
+    background-color: rgb(18, 161, 209);
+    color: white;
+    font-size: 12px;
+    padding: 10px 35px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.container button:hover {
+    background-color: rgb(2, 100, 132);
+}
+
+.signInSignUpButtons {
+    display: flex;
+    gap: 20px; /* Space between Sign In and Sign Up buttons */
+}
+.signUp-button {
+    background-color: rgb(18, 161, 209);
+    color: white;
+    font-size: 12px;
+    padding: 10px 35px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.signUp-button:hover {
+    background:  rgb(2, 100, 132);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    #header1 {
+        padding: 15px 5%; /* Reduce padding on smaller screens */
+    }
+
+    .navLinks li {
+        padding: 5px 10px;
+    }
+
+    .container {
+        margin: 20px 10%;
+        width: auto;
+    }
+
+    .container input {
+        width: 80%; /* Wider inputs on smaller screens */
+    }
+
+    .signInSignUpButtons {
+        flex-direction: column; /* Stack buttons on mobile */
+        gap: 10px;
+    }
+}
+

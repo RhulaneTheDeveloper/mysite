@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Track Ticket</title>
+  <style>
+    :root {
+      --primary-color: #007bff;
+      --secondary-color: #6c757d;
+      --success-color: #28a745;
+      --danger-color: #dc3545;
+      --bg-color: #f8f9fa;
+      --text-color: #333;
+      --card-bg: #fff;
+      --font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+    }
+
+    header {
+      background: #ffffff;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      color: var(--primary-color);
+      margin: 0;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      background-color: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background-color: var(--card-bg);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      font-size: 26px;
+    }
+
+    p {
+      font-size: 18px;
+      margin: 12px 0;
+    }
+
+    .status-tracker {
+      display: flex;
+      justify-content: space-between;
+      margin: 30px 0;
+      position: relative;
+    }
+
+    .status-tracker::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 5%;
+      right: 5%;
+      height: 4px;
+      background: #ccc;
+      z-index: 0;
+      transform: translateY(-50%);
+    }
+
+    .status-step {
+      position: relative;
+      z-index: 1;
+      width: 20%;
+      text-align: center;
+    }
+
+    .status-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #ccc;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .status-label {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .active {
+      background-color: var(--primary-color);
+    }
+
+    .done {
+      background-color: var(--success-color);
+    }
+
+    .ticket-image {
+      margin-top: 20px;
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.8);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>CIRS - Track Ticket</h1>
+    <a href="{{ url_for('dashboard') }}" class="btn">Back to Dashboard</a>
+  </header>
+
+  <div class="container">
+    <h2>Tracking Ticket #{{ ticket.ticket_id }}</h2>
+
+    <!-- Status Tracking Bar -->
+    <div class="status-tracker">
+      {% set status = ticket.status|lower %}
+      {% set status_steps = ['submitted', 'pending', 'assigned', 'in progress', 'resolved'] %}
+      
+      <!-- Default status is 'pending' if the status is not set or invalid -->
+      {% if status not in status_steps %}
+        {% set status = 'pending' %}
+      {% endif %}
+
+      {% for step in status_steps %}
+        <div class="status-step">
+          <div class="status-circle
+            {% if status_steps.index(step) < status_steps.index(status) %}
+              done
+            {% elif status_steps.index(step) == status_steps.index(status) %}
+              active
+            {% endif %}">{{ loop.index }}</div>
+          <div class="status-label">{{ step.title() }}</div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <p><strong>Type:</strong> {{ ticket.incident_type or 'Not specified' }}</p>
+    <p><strong>Date Created:</strong> {{ ticket.created_at or 'Unknown' }}</p>
+    <p><strong>Assigned Team:</strong> {{ ticket.team_id or 'Not yet assigned' }}</p>
+    <p><strong>Description:</strong> {{ ticket.description or 'No description provided.' }}</p>
+
+    {% if ticket.image_base64 %}
+      <img src="{{ ticket.image_base64 }}" alt="Incident Image" class="ticket-image" />
+    {% else %}
+      <p><em>No image available for this ticket.</em></p>
+    {% endif %}
+  </div>
+
+  <footer>
+    &copy; 2025 CIRS System. All rights reserved.
+  </footer>
+</body>
+</html>

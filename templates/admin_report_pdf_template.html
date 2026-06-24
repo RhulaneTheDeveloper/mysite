@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin Report PDF</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #333; padding: 6px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        h1 { text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>CIRS Admin Report {{title}}</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Incident ID</th>
+                <th>Issue Type</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Created At</th>
+                <th>Team ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in reports %}
+            <tr>
+                <td>{{ r.incident_id }}</td>
+                <td>{{ r.category }}</td>
+                <td>{{ r.description }}</td>
+                <td>{{ r.status or 'N/A' }}</td>
+                <td>{{ r.created_at.strftime('%Y-%m-%d %H:%M:%S') if r.created_at else 'N/A' }}</td>
+                <td>{{ r.team_id or 'N/A' }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" style="text-align:center;">No reports found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

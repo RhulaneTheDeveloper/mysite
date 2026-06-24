@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Report an Issue - CIRS</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, rgb(54, 79, 90), rgb(9, 119, 167));
+            color: #333;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header, footer {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .container {
+            flex: 1;
+            padding: 40px 20px;
+        }
+
+        .report-form {
+            max-width: 600px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            color: #f54848;
+            font-size: 2.5rem;
+            font-weight: 900;
+            font-family: "Poppins", sans-serif;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input, textarea, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #imagePreview, #captured-image {
+            display: none;
+            max-width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            padding: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CIRS</h1>
+        <nav>
+            <ul>
+                <li><a href="/dashboard">Go Back To Dashboard</a></li>
+                <li><a href="/viewReports.html">View Reports</a></li>
+                <li><a href="/logout.html">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="report-form">
+            <h2>📸 Report an Issue</h2>
+            <p>
+                To help us locate and address the problem effectively, please take a picture of the issue.
+                This visual evidence will assist our maintenance team in understanding the situation better
+                and responding promptly to resolve the issue. Your cooperation is greatly appreciated!
+            </p>
+
+            <form action="/reportIncident.html" method="POST" enctype="multipart/form-data">
+                <label for="issue_type">Type of Issue:</label>
+                <select name="issue_type" id="issue_type" required>
+                    <option value="Street Light">Street Light</option>
+                    <option value="Pothole">Pothole</option>
+                    <option value="Broken Sidewalk">Broken Sidewalk</option>
+                    <option value="Garbage Collection">Garbage Collection</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <label for="captureBtn">Take a Picture:</label>
+                <video id="video" width="100%" height="320" autoplay></video>
+                <button type="button" id="rotateCameraBtn">🔄 Rotate Camera</button>
+                <button type="button" id="captureBtn">Capture Image</button>
+                <canvas id="canvas" style="display:none;"></canvas>
+                <input type="hidden" id="cameraImage" name="cameraImage" />
+                <img id="captured-image" alt="Captured Image">
+
+                <label for="imageFile">Or upload a picture of the issue:</label>
+                <input type="file" id="imageFile" name="image" accept="image/*" onchange="previewImage(event)">
+                <img id="imagePreview" alt="Image Preview">
+
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="4" required placeholder="Provide a detailed description of the issue..."></textarea>
+
+                <input type="hidden" id="latitude" name="latitude">
+                <input type="hidden" id="longitude" name="longitude">
+
+                <button type="submit">Submit Report</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <nav>
+            <a href="/dashboard">Dashboard</a> |
+            <a href="/viewReports.html">View Reports</a> |
+            <a href="/logout.html">Logout</a>
+        </nav>
+    </footer>
+
+    <script>
+        let stream;
+        let currentVideoDeviceId = null;
+        let videoDevices = [];
+        let currentDeviceIndex = 0;
+
+        window.onload = async function () {
+            getLocation();
+
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                videoDevices = devices.filter(device => device.kind === 'videoinput');
+
+                if (videoDevices.length === 0) {
+                    alert("No video input devices found.");
+                    return;
+                }
+
+                currentDeviceIndex = 0;
+                startCamera(videoDevices[currentDeviceIndex].deviceId);
+            } catch (err) {
+                console.error("Error getting video devices:", err);
+            }
+        };
+
+        async function startCamera(deviceId) {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { deviceId: { exact: deviceId } }
+                });
+                currentVideoDeviceId = deviceId;
+                document.getElementById('video').srcObject = stream;
+            } catch (err) {
+                console.error("Error starting camera:", err);
+                alert("Could not start camera.");
+            }
+        }
+
+        document.getElementById('rotateCameraBtn').addEventListener('click', () => {
+            if (videoDevices.length <= 1) {
+                alert("No alternative camera found.");
+                return;
+            }
+            currentDeviceIndex = (currentDeviceIndex + 1) % videoDevices.length;
+            startCamera(videoDevices[currentDeviceIndex].deviceId);
+        });
+
+        document.getElementById('captureBtn').addEventListener('click', () => {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+
+            const MAX_WIDTH = 800;
+            const MAX_HEIGHT = 600;
+            let width = video.videoWidth;
+            let height = video.videoHeight;
+
+            if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+                const aspectRatio = width / height;
+                if (aspectRatio > 1) {
+                    width = MAX_WIDTH;
+                    height = MAX_WIDTH / aspectRatio;
+                } else {
+                    width = MAX_HEIGHT * aspectRatio;
+                    height = MAX_HEIGHT;
+                }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(video, 0, 0, width, height);
+
+            const imageData = canvas.toDataURL("image/jpeg", 0.7);
+            const imageSizeKB = Math.round((imageData.length * 3) / 4 / 1024);
+
+            if (imageSizeKB > 10240) {
+                alert("Captured image is too large (" + imageSizeKB + " KB). Please retake a smaller photo.");
+                return;
+            }
+
+            document.getElementById('cameraImage').value = imageData;
+            document.getElementById('captured-image').src = imageData;
+            document.getElementById('captured-image').style.display = 'block';
+
+            if (stream) stream.getTracks().forEach(track => track.stop());
+            document.getElementById('imageFile').disabled = true;
+        });
+
+        function previewImage(event) {
+            const imagePreview = document.getElementById('imagePreview');
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function () {
+                imagePreview.src = reader.result;
+                imagePreview.style.display = 'block';
+            };
+            if (file) reader.readAsDataURL(file);
+            document.getElementById('captureBtn').disabled = true;
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    document.getElementById('latitude').value = position.coords.latitude;
+                    document.getElementById('longitude').value = position.coords.longitude;
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+    </script>
+</body>
+</html>

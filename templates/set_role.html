@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report an Issue - CIRS</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* (same CSS as you provided, unchanged for now) */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, rgb(54, 79, 90), rgb(9, 119, 167));
+            color: #333;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header, footer {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            nav ul li {
+                display: inline;
+                margin: 0 15px;
+            }
+
+                nav ul li a {
+                    text-decoration: none;
+                    color: #333;
+                    font-weight: bold;
+                }
+
+        .container {
+            flex: 1;
+            padding: 40px 20px;
+        }
+
+        .report-form {
+            max-width: 600px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            color: #f54848;
+            font-size: 2.5rem;
+            font-weight: 900;
+            font-family: "Poppins", sans-serif;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input, textarea, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+
+        #imagePreview, #captured-image {
+            display: none;
+            max-width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            padding: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CIRS</h1>
+        <nav>
+            <ul>
+                <li><a href="/dashboard">Go Back To Dashboard</a></li>
+                <li><a href="/viewReports.html">View Reports</a></li>
+                <li><a href="/logout.html">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="report-form">
+            
+
+            <form action="/setRole" method="POST" enctype="multipart/form-data">
+                <label>
+                    <input type="radio" name="specialization" value="general" checked>
+                    general
+                </label><br>
+
+                <label>
+                    <input type="radio" name="specialization" value="electrical">
+                    electrical
+                </label><br>
+
+                <label>
+                    <input type="radio" name="specialization" value="civil">
+                    civil
+                </label><br>
+                <button type="submit">Confirm</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <nav>
+            <a href="/dashboard">Dashboard</a> |
+            <a href="/viewReports.html">View Reports</a> |
+            <a href="/logout.html">Logout</a>
+        </nav>
+    </footer>
+
+
+</body>
+</html>

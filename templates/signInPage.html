@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to CIRS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, rgb(54, 79, 90), rgb(9, 119, 167));
+            color: #333;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Make the body fill the viewport height */
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #007bff;
+        }
+
+        .container {
+            flex: 1; /* Make the container expand to take the remaining space */
+            padding: 40px 20px;
+        }
+
+        .form-container {
+            max-width: 500px;
+            max-height: 600px;
+            margin: auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        .form-container:hover {
+            background: linear-gradient(to right, rgb(54, 79, 90), rgb(9, 119, 167));
+            box-shadow: 0 4px 12px rgba(0, 0, 139, 0.5);
+            color: white;
+        }
+
+        input {
+            width: 70%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button, .signUp-button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        button:hover, .signUp-button:hover {
+            background: #0056b3;
+        }
+
+        footer {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: auto; /* Push the footer to the bottom */
+        }
+
+        footer nav a {
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CIRS</h1>
+        <nav>
+            <ul>
+                <li><a href="registerPage.html">Create Account</a></li>
+                <li><a href="/">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="form-container sign-in">
+            <form action="/signInPage.html" method="POST">
+                {{ msg }}
+                <h1>Sign in</h1>
+                <span>Fill in the information below:</span>
+                <input type="email" name="email" placeholder="Email">
+                <input type="password" name="password" placeholder="Password">
+                <div class="signInSignUpButtons">
+                    <button type="submit">Sign In</button>
+                    <a href="registerPage.html" class="signUp-button">Sign Up</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>Ready to transform your community’s infrastructure? Join CIRS today.</p>
+        <a href="registerPage.html">Sign Up Now</a>
+        <nav>
+            <a href="/aboutUs.html">About</a> | <a href="/contactUs.html">Contact</a>
+        </nav>
+    </footer>
+    <script>
+    document.querySelector('form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const emailField = document.querySelector('input[name="email"]');
+        const passwordField = document.querySelector('input[name="password"]');
+
+        const email = emailField.value.trim();
+        const password = passwordField.value.trim();
+
+        let valid = true;
+
+        // Simple email pattern
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailPattern.test(email)) {
+            emailField.value = '';
+            emailField.placeholder = 'Invalid Email';
+            valid = false;
+        }
+
+        if (password.length < 3) {
+            passwordField.value = '';
+            passwordField.placeholder = 'Invalid Password';
+            valid = false;
+        }
+
+        if (valid) {
+            e.target.submit(); // Proceed if both fields are valid
+        }
+    });
+</script>
+
+</body>
+</html>

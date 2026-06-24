@@ -1,0 +1,284 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+body{
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right,
+            rgb(54, 79, 90),rgb(9, 119, 167));
+}
+
+li, a{
+    font-family: "Montserrat",sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: white;
+    text-decoration: none;
+    background-color: rgb(1, 33, 44);
+}
+
+#header1{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10%;
+    color: white;
+    background-color: rgb(3, 52, 69);
+}
+
+
+
+#nameLogo{
+    cursor: pointer;
+}
+
+.navLinks{
+    list-style: none;
+}
+
+.navLinks li{
+    display: inline-block;
+    padding: 5px 20px;
+    border-radius: 7px;
+}
+
+.navLinks li a{
+    transition: all 0.3s ease 0s;
+}
+
+.navLinks li a:hover{
+    color: rgb(18, 161, 209);
+}
+
+
+/* Header2 */
+#header2 {
+    color: white;
+    text-align: center;
+    padding: 110px ;
+}
+#header2:hover{
+    background: linear-gradient(to right,
+            rgba(56, 82, 93, 1),rgba(10, 123, 171, 1));
+    border-radius: 20px;         
+}
+
+#header-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.subheadline {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.getStarted-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: #e74c3c; /* Red */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.getStarted-button:hover {
+    background: #c0392b;
+}
+
+/* introSection */
+
+.introSection{
+    padding: 110px;
+    text-align: center;
+    justify-content: center;
+}
+.introSection:hover{
+
+    background: linear-gradient(to right,
+            rgba(56, 82, 93, 1),rgba(10, 123, 171, 1));
+    border-radius: 20px;        
+}
+
+.learnMore-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: #e74c3c; /* Red */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.learnMore-button:hover {
+    background: #c0392b;
+}
+
+section .introSection h2{
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+section .introSection p{
+    max-width: 800px;
+    margin: 0 auto 2rem;
+}
+
+/* Container sharing*/
+
+.container{
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#header2, .introSection{
+    flex: 1;
+    box-sizing: border-box;
+}
+
+.features {
+    padding: 3rem 1rem;
+    text-align: center;
+}
+
+.features:hover{
+    background: linear-gradient(to right,
+            rgba(56, 82, 93, 1),rgba(10, 123, 171, 1));
+          
+}
+
+.features h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.feature-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.feature-item {
+    max-width: 300px;
+    padding: 1rem;
+}
+
+.icon {
+    width: 170px;
+    height: 170px;
+    margin-bottom: 1rem;
+}
+
+.feature-item:hover{
+    background: linear-gradient(to right,
+            rgba(56, 82, 93, 1),rgba(10, 123, 171, 1));
+    border-radius: 20px;
+}
+
+.feature-item h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/*How it works*/
+.how-it-works {
+    padding: 3rem 1rem;
+    background: linear-gradient(to right,
+            rgb(54, 79, 90),rgb(9, 119, 167));
+    text-align: center;
+}
+
+.how-it-works h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.steps {
+    max-width: 800px;
+    margin: 0 auto 2rem;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    margin: 1rem 0;
+    font-size: 1.1rem;
+}
+
+.step span {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background: #167abd;
+    color: white;
+    border-radius: 50%;
+    line-height: 30px;
+    margin-right: 1rem;
+}
+
+/* Benefits Section */
+.benefits {
+    padding: 3rem 1rem;
+    text-align: center;
+}
+
+.benefits h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.benefits p {
+    margin-bottom: 1rem;
+}
+
+.benefits ul {
+    list-style: none;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.benefits li {
+    margin: 0.5rem 0;
+}
+
+/* Footer */
+footer {
+    background: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+footer p {
+    margin-bottom: 1rem;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    margin: 0 0.5rem;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+
+@media (max-width: 768px) {
+    .container {
+      flex-direction: column; /* Stack sections vertically on smaller screens */
+    }
+  }

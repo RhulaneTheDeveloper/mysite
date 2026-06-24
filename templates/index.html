@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to CIRS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, rgb(54, 79, 90), rgb(9, 119, 167));
+            color: #333;
+            text-align: center;
+        }
+        header {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #007bff;
+        }
+        main {
+            padding: 40px 20px;
+        }
+        section {
+            margin: 30px auto;
+            max-width: 800px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+        section:hover {
+            background: linear-gradient(to right, rgb(54, 79, 90), rgb(9, 119, 167));
+            box-shadow: 0 4px 12px rgba(0, 0, 139, 0.5);
+            color: white;
+        }
+        .features-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .feature {
+            width: 30%;
+            text-align: center;
+        }
+        .feature img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        a.button {
+            display: inline-block;
+            padding: 12px 24px;
+            margin-top: 15px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        a.button:hover {
+            background: #0056b3;
+        }
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CIRS</h1>
+        <nav>
+            <ul>
+                <li><a href="signInPage.html">Sign in</a></li>
+                <li><a href="registerPage.html">Register</a></li>
+                <li><a href="/aboutUs.html">About us</a></li>
+                <li><a href="/contactUs.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h1>What Is CIRS?</h1>
+            <p>The Community Infrastructure Reporting System (CIRS) helps connect residents with maintenance authorities for faster, transparent solutions.</p>
+            <a href="/aboutUs.html" class="button">Learn More</a>
+        </section>
+        <section id="features">
+            <h2>Key Features</h2>
+            <div class="features-container">
+                <div class="feature">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Report with Ease">
+                    <p><strong>Report with Ease:</strong> Snap a photo or video and report issues effortlessly.</p>
+                </div>
+                <div class="feature">
+                    <img src="https://cdn-icons-png.flaticon.com/512/684/684809.png" alt="Smart Ticketing">
+                    <p><strong>Smart Ticketing:</strong> Unique ticket IDs for every report, ensuring accountability.</p>
+                </div>
+                <div class="feature">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1828/1828911.png" alt="Stay in the Loop">
+                    <p><strong>Stay in the Loop:</strong> Track progress, comment, and receive updates.</p>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h1>Empower Your Community with CIRS</h1>
+            <p>Report, Track, and Resolve Infrastructure Issues—Together.</p>
+            <a href="registerPage.html" class="button">Register an Account</a>
+        </section>
+
+
+
+        <section>
+            <h1>How It Works</h1>
+
+                <p>1. Sign Up: Residents and authorities register.</p>
+                <p>2. Report: Submit issues with media.</p>
+                <p>3. Track: Follow automated ticket updates.</p>
+                <p>4. Resolve: Authorities close tickets with proof.</p>
+
+            <a href="signInPage.html" class="button">SIGN IN</a>
+        </section>
+
+        <section>
+            <h2>Why CIRS?</h2>
+
+                <p>Community-driven improvements</p>
+                <p>Faster issue resolution</p>
+                <p>Transparent process</p>
+                <p>Smarter urban maintenance</p>
+
+        </section>
+    </main>
+
+    <footer>
+        <p>Ready to transform your community’s infrastructure? Join CIRS today.</p>
+        <a href="registerPage.html">Sign Up Now</a>
+        <nav>
+            <a href="/aboutUs.html">About</a> | <a href="/contactUs.html">Contact</a>
+        </nav>
+    </footer>
+</body>
+</html>

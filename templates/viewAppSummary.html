@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Incident Summary</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #0977a7;
+            --accent: #f3f3f3;
+            --text-dark: #2c3e50;
+            --white: #ffffff;
+            --card-bg: #f9f9f9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #364f5a, #0977a7);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px 40px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            color: var(--primary);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+        .profile-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #007bff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            outline: none;
+        }
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            z-index: 1000;
+        }
+        .profile-dropdown a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+            transition: background 0.3s;
+        }
+        .profile-dropdown a:hover {
+            background: #007bff;
+            color: white;
+        }
+        .profile-container:hover .profile-dropdown {
+            display: block;
+        }
+
+        .summary-container {
+            padding: 40px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .summary-container h2 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--white);
+        }
+
+        .grid-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            flex: 1 1 250px;
+            min-width: 220px;
+            text-align: center;
+        }
+
+        .card p {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .chart-section {
+            margin-top: 50px;
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .chart-section h3 {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary{
+            background-color: white;
+            color: var(--primary);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            flex-shrink: 0;
+            align-self: flex-end;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin: 20px auto;
+        }
+
+        .btn-primary:hover {
+            background-color: #065a7a;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto !important;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+    <h1>CIRS Admin Dashboard</h1>
+
+    <form action="{{ url_for('p_tickets') }}" method="POST"  onsubmit="return promptForPID(this);" style="display:inline;">
+    <input type="hidden" name="p_id" />
+    <button type="submit" style="background-color:cadetblue; color:white; border:none; padding:5px 10px; border-radius:5px;">View</button>
+</form>
+
+
+
+    <script>
+        function promptForPID(form) {
+            const input = prompt("Enter the Personnel ID (p_id):");
+            if (input === null || input.trim() === "") {
+                return false; // Cancel submission
+            }
+            form.querySelector('input[name="p_id"]').value = input.trim(); // safer & reliable
+            return true; // Proceed with submission
+        }
+    </script>
+    <nav>
+        <ul>
+            <li><a href="/admin_reports">Admin reports</a></li>
+
+            <li><a href="/profile.html">Account</a></li>
+            <li><a href="/logout.html">Logout</a></li>
+        </ul>
+    </nav>
+    <div class="profile-container">
+        <button class="profile-button">{{ session['email'][0] }}</button>
+        <div class="profile-dropdown">
+            <a href="/profile.html">Update Profile</a>
+            <a href="/logout.html">Logout</a>
+        </div>
+    </div>
+</header>
+
+    <div class="summary-container">
+        <h2>Incident Summary</h2>
+        <div class="grid-wrapper">
+            <div class="card">
+                <p>Total Users</p>
+                <div class="value">{{ stats.users }}</div>
+            </div>
+
+            <div class="card">
+                <p>Total Workers</p>
+                <div class="value">{{ stats.workers }}</div>
+            </div>
+            <div class="card">
+                <p>Total Citizens</p>
+                <div class="value">{{ stats.citizens }}</div>
+            </div>
+            <div class="card">
+                <p>Total Incidents</p>
+                <div class="value">{{ stats.incidents }}</div>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <h3>Incidents by Status</h3>
+            <canvas id="myPieChart"></canvas>
+        </div>
+        <a href="{{ url_for('download_app_summary_pdf') }}" class="btn-primary">
+           Download Summary as PDF
+        </a>
+    </div>
+
+
+
+    <script>
+        const statusData = {
+            pending: {{ stats.pending }},
+            assigned: {{ stats.assigned }},
+            'in progress': {{ stats['in progress'] }},
+            resolved: {{ stats.resolved }},
+            closed: {{ stats.closed }}
+        };
+
+        const ctx = document.getElementById('myPieChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Pending', 'Assigned', 'In Progress', 'Resolved', 'Closed'],
+                datasets: [{
+                    label: 'Incident Status',
+                    data: [
+                        statusData.pending,
+                        statusData.assigned,
+                        statusData['in progress'],
+                        statusData.resolved,
+                        statusData.closed
+                    ],
+                    backgroundColor: [
+                        '#f39c12', '#3498db', '#9b59b6', '#2ecc71', '#95a5a6'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

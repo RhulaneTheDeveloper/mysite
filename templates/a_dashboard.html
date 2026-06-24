@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to CIRS</title>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #0056b3;
+            --light-bg: #f5f5f5;
+            --white-bg: #ffffff;
+            --text-dark: #333;
+            --text-light: #fff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, rgb(54, 79, 90), rgb(9, 119, 167));
+            color: #333;
+            text-align: center;
+        }
+
+        header {
+              background: rgba(255, 255, 255, 0.8);
+              padding: 20px;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+        }
+
+
+        header h1 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        nav ul li a {
+           text-decoration: none;
+           color: #333;
+           font-weight: bold;
+           transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+           color: #007bff;
+        }
+
+        .notification-icon {
+           font-size: 1.5rem;
+           color: white;
+           cursor: pointer;
+        }
+
+
+        .profile-container {
+            position: relative;
+        }
+
+        .profile-button {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: var(--text-light);
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: var(--white-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
+            min-width: 150px;
+            z-index: 100;
+        }
+
+        .profile-dropdown a {
+            display: block;
+            padding: 10px 15px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .profile-dropdown a:hover {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        .profile-container:hover .profile-dropdown {
+            display: block;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 40px 20px;
+        }
+
+        .action-button {
+            background: var(--primary-color);
+            color: var(--text-light);
+            padding: 18px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .action-button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .action-button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CIRS Admin Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="viewAppSummary.html">View Summary</a></li>
+                <li><a href="/admin_reports">Admin reports</a></li>
+
+                <li><a href="/profile.html">Account</a></li>
+                <li><a href="/logout.html">Logout</a></li>
+            </ul>
+        </nav>
+        <div class="profile-container">
+            <button class="profile-button">{{ session['email'][0] }}</button>
+            <div class="profile-dropdown">
+                <a href="/profile.html">Update Profile</a>
+                <a href="/logout.html">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <form action="{{ url_for('p_tickets') }}" method="POST"  onsubmit="return promptForPID(this);" style="display:inline;">
+    <input type="hidden" name="p_id" />
+    <button type="submit" style="background-color:cadetblue; color:white; border:none; padding:5px 10px; border-radius:5px;">View</button>
+</form>
+
+
+
+    <script>
+        function promptForPID(form) {
+            const input = prompt("Enter the Personnel ID (p_id):");
+            if (input === null || input.trim() === "") {
+                return false; // Cancel submission
+            }
+            form.querySelector('input[name="p_id"]').value = input.trim(); // safer & reliable
+            return true; // Proceed with submission
+        }
+    </script>
+
+
+    <!-- Action Buttons -->
+
+
+    <footer>
+        <p>&copy; 2025 CIRS. All rights reserved.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Reports</title>
+  <style>
+    :root {
+      --primary: #0977a7;
+      --accent: #f3f3f3;
+      --text-dark: #2c3e50;
+      --white: #ffffff;
+      --card-bg: #f9f9f9;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #364f5a, #0977a7);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px 40px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            color: var(--primary);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+
+    h1 {
+      color: var(--white);
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    form {
+      background: var(--card-bg);
+      padding: 25px 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 700px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 40px;
+      color: var(--text-dark);
+      display: block;
+      margin: 20px auto;
+    }
+
+    form label {
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    form select,
+    form input[type="date"],
+    form input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      outline-color: var(--primary);
+    }
+
+    form button {
+      background-color: var(--primary);
+      color: var(--white);
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      flex-shrink: 0;
+      align-self: flex-end;
+      transition: background-color 0.3s ease;
+    }
+
+    form button:hover {
+      background-color: #065a7a;
+    }
+
+    h2 {
+      color: var(--white);
+      margin-bottom: 20px;
+      font-size: 2rem;
+      width: 100%;
+      max-width: 700px;
+      text-align: left;
+    }
+
+    table {
+      width: 100%;
+      max-width: 700px;
+      border-collapse: collapse;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      margin-bottom: 30px;
+      color: var(--text-dark);
+    }
+
+    thead {
+      background-color: var(--primary);
+      color: var(--white);
+      font-weight: 700;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    tbody tr:hover {
+      background-color: #e9f1f7;
+    }
+
+    /* Style PDF button */
+    form[action$="download_admin_report_pdf"] {
+      max-width: 700px;
+      width: 100%;
+      text-align: left;
+    }
+
+    form[action$="download_admin_report_pdf"] button {
+      background-color: var(--primary);
+      color: var(--white);
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background-color 0.3s ease;
+    }
+
+    form[action$="download_admin_report_pdf"] button:hover {
+      background-color: #065a7a;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      form {
+        flex-direction: column;
+      }
+      form button {
+        align-self: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+    <header>
+        <h1>CIRS Admin Reports</h1>
+
+    </header>
+  <form method="GET" action="{{ url_for('admin_reports') }}">
+    <h2 style="color: black">Find Reports by status:</h2>
+    <div style="flex: 1 1 200px; min-width: 150px;">
+      <label for="status">Ticket Status:</label>
+      <select name="status" id="status">
+        <option value="">--Any--</option>
+        <option value="pending" {% if request.args.get('status') == 'pending' %}selected{% endif %}>Pending</option>
+        <option value="assigned" {% if request.args.get('status') == 'assigned' %}selected{% endif %}>Assigned</option>
+        <option value="in progress" {% if request.args.get('status') == 'in progress' %}selected{% endif %}>In Progress</option>
+        <option value="resolved" {% if request.args.get('status') == 'resolved' %}selected{% endif %}>Resolved</option>
+        <option value="closed" {% if request.args.get('status') == 'closed' %}selected{% endif %}>Closed</option>
+      </select>
+    </div>
+
+    <div style="flex: 1 1 200px; min-width: 150px;">
+      <label for="assigned_team">Maintenance Personnel ID:</label>
+      <input type="number" id="assigned_team" name="assigned_team" value="{{ request.args.get('assigned_team', '') }}">
+    </div>
+
+    <div style="flex-shrink: 0;">
+      <button type="submit">Filter</button>
+    </div>
+
+
+  {% if reports is defined %}
+    <table>
+      <thead>
+        <tr>
+          <th>Incident ID</th>
+          <th>Issue Type</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Created At</th>
+          <th>Citizen_id</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for r in reports %}
+        <tr>
+          <td>{{ r.incident_id }}</td>
+          <td>{{ r.category }}</td>
+          <td>{{ r.description }}</td>
+          <td>{{ r.status }}</td>
+          <td>{{ r.created_at }}</td>
+          <td>{{ r.citizen_id }}</td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="6" style="text-align:center;">No reports found for the selected criteria.</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </form>
+    <form method="POST" action="{{ url_for('download_admin_report_pdf') }}">
+      <input type="hidden" name="status" value="{{ request.args.get('status', '') }}">
+      <input type="hidden" name="start_date" value="{{ request.args.get('start_date', '') }}">
+      <input type="hidden" name="end_date" value="{{ request.args.get('end_date', '') }}">
+      <input type="hidden" name="assigned_team" value="{{ request.args.get('assigned_team', '') }}">
+      <button type="submit">Download PDF</button>
+    </form>
+  {% endif %}
+
+
+<form method="GET" action="{{ url_for('admin_reports') }}">
+  <form method="GET" action="{{ url_for('admin_reports') }}">
+    <h2 style="color: black">Find Reports by Date</h2>
+
+    <div style="flex: 1 1 200px; min-width: 150px;">
+      <label for="start_date">Start Date:</label>
+      <input type="date" id="start_date" name="start_date" value="{{ request.args.get('start_date', '') }}">
+    </div>
+
+    <div style="flex: 1 1 200px; min-width: 150px;">
+      <label for="end_date">End Date:</label>
+      <input type="date" id="end_date" name="end_date" value="{{ request.args.get('end_date', '') }}">
+    </div>
+
+    <div style="flex-shrink: 0; margin-top: 20px;">
+      <button type="submit">Filter</button>
+    </div>
+
+{% if reports is defined %}
+
+  <table>
+    <thead>
+      <tr>
+        <th>Incident ID</th>
+        <th>Issue Type</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Created At</th>
+        <th>Citizen_id</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for r in reports %}
+      <tr>
+        <td>{{ r.incident_id }}</td>
+        <td>{{ r.category }}</td>
+        <td>{{ r.description }}</td>
+        <td>{{ r.status }}</td>
+        <td>{{ r.created_at }}</td>
+        <td>{{ r.citizen_id }}</td>
+      </tr>
+    {% else %}
+      <tr>
+        <td colspan="6" style="text-align:center;">No reports found for the selected criteria.</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</form>
+  <form method="POST" action="{{ url_for('download_admin_report_pdf') }}">
+    <input type="hidden" name="status" value="{{ request.args.get('status', '') }}">
+    <input type="hidden" name="start_date" value="{{ request.args.get('start_date', '') }}">
+    <input type="hidden" name="end_date" value="{{ request.args.get('end_date', '') }}">
+    <input type="hidden" name="assigned_team" value="{{ request.args.get('assigned_team', '') }}">
+    <button type="submit">Download PDF</button>
+  </form>
+{% endif %}
+
+</body>
+</html>

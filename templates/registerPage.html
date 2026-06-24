@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, rgb(54, 79, 90), rgb(9, 119, 167));
+      color: #333;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    nav ul li {
+      display: inline;
+      margin: 0 15px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #007bff;
+    }
+
+    .container {
+      flex: 1;
+      padding: 40px 20px;
+    }
+
+    .form-container {
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    .form-container:hover {
+      background: linear-gradient(to right, rgb(54, 79, 90), rgb(9, 119, 167));
+      box-shadow: 0 4px 12px rgba(0, 0, 139, 0.5);
+      color: white;
+    }
+
+    input {
+      width: 70%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button, .signIn-button {
+      background: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    button:hover, .signIn-button:hover {
+      background: #0056b3;
+    }
+
+    .signInSignUpButtons {
+      margin-top: 20px;
+    }
+
+    footer {
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      margin-top: auto;
+    }
+
+    footer nav a {
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    progress {
+      width: 70%;
+      height: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    progress::-webkit-progress-bar {
+      background-color: #eee;
+      border-radius: 5px;
+    }
+
+    progress::-webkit-progress-value {
+      border-radius: 5px;
+      background-color: red;
+      transition: background-color 0.3s;
+    }
+
+    progress::-moz-progress-bar {
+      border-radius: 5px;
+      background-color: red;
+      transition: background-color 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CIRS</h1>
+    <nav>
+      <ul>
+        <li><a href="signInPage.html">Already have an account?</a></li>
+        <li><a href="/">Home</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="form-container sign-up">
+      <form action="/registerPage.html" method="POST">
+        <div id="message"></div>
+        <div>{{ msg }}</div>
+        <h1>Create Account</h1>
+        <span>Fill in the information below:</span>
+
+        <input type="text" name="fullname" placeholder="Full Name"
+               pattern="^[A-Za-z]+ [A-Za-z]+$"
+               title="Enter first and last name with only letters and a single space in between. No numbers or special characters allowed." required>
+
+        <input type="number" name="idnum" placeholder="ID Number"
+               pattern="^\d{13}$"
+               title="Enter a 13-digit South African ID number." required>
+
+        <input type="number" name="phonenum" placeholder="Phone Number"
+               pattern="^0[6-8][0-9]{8}$"
+               title="Enter a valid 10-digit South African mobile number starting with 06, 07, or 08 (e.g., 0821234567)" required>
+
+        <input type="email" name="email" placeholder="Email" required>
+
+        <input type="password" id="password" name="password" placeholder="Password" required>
+        <progress id="password-strength" value="0" max="100"></progress>
+
+        <input type="password" id="confirm-password" name="confirmPassword" placeholder="Confirm Password" required>
+
+        <div class="signInSignUpButtons">
+          <button type="submit">Sign Up</button>
+          <a href="signInPage.html" class="signIn-button">Sign In</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+        <p>Ready to transform your community’s infrastructure? Join CIRS today.</p>
+        <a href="registerPage.html">Sign Up Now</a>
+        <nav>
+            <a href="/aboutUs.html">About</a> | <a href="/contactUs.html">Contact</a>
+        </nav>
+    </footer>
+
+  <script>
+    function isValidLuhn(id) {
+      if (id.length !== 13 || !/^\d+$/.test(id)) return false;
+      let sum = 0;
+      for (let i = 0; i < 13; i++) {
+        let digit = parseInt(id.charAt(i));
+        if (i % 2 === 1) {
+          digit *= 2;
+          if (digit > 9) digit -= 9;
+        }
+        sum += digit;
+      }
+      return sum % 10 === 0;
+    }
+
+    function calculatePasswordStrength(password) {
+      let strength = 0;
+      if (password.length >= 6) strength += 25;
+      if (/[a-z]/.test(password)) strength += 15;
+      if (/[A-Z]/.test(password)) strength += 25;
+      if (/[0-9]/.test(password)) strength += 20;
+      if (/[^A-Za-z0-9]/.test(password)) strength += 15;
+      return Math.min(strength, 100);
+    }
+
+    function updateProgressColor(color) {
+      const style = document.createElement('style');
+      style.innerHTML = `
+        progress::-webkit-progress-value { background-color: ${color} !important; }
+        progress::-moz-progress-bar { background-color: ${color} !important; }
+      `;
+      document.head.appendChild(style);
+    }
+
+    const passwordField = document.getElementById('password');
+    const confirmPasswordField = document.getElementById('confirm-password');
+    const strengthBar = document.getElementById('password-strength');
+
+    passwordField.addEventListener('input', function () {
+      const password = passwordField.value;
+      const strength = calculatePasswordStrength(password);
+      strengthBar.value = strength;
+
+      if (strength < 40) {
+        updateProgressColor('red');
+      } else if (strength < 70) {
+        updateProgressColor('orange');
+      } else {
+        updateProgressColor('green');
+      }
+    });
+
+    document.querySelector('form').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const idField = document.querySelector('input[name="idnum"]');
+      const password = passwordField.value.trim();
+      const confirmPassword = confirmPasswordField.value.trim();
+      const id = idField.value.trim();
+
+      let valid = true;
+      let errorMessages = [];
+
+      if (!isValidLuhn(id)) {
+        valid = false;
+        errorMessages.push("Invalid South African ID number.");
+      }
+
+      if (calculatePasswordStrength(password) < 50) {
+        valid = false;
+        errorMessages.push("Password is too weak. Use upper/lowercase letters, numbers, and symbols.");
+      }
+
+      if (password !== confirmPassword) {
+        valid = false;
+        errorMessages.push("Passwords do not match.");
+      }
+
+      const msgDiv = document.getElementById('message');
+      msgDiv.innerHTML = errorMessages.length ?
+        `<p style="color:black;">${errorMessages.join('<br>')}</p>` : '';
+
+      if (valid) {
+        e.target.submit(); // Or replace with fetch() if using API
+      }
+    });
+
+    // Initialize color
+    updateProgressColor('red');
+  </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ticket Assignment</title>
+</head>
+<body>
+    <h2>Ticket Assignment Result</h2>
+
+    {% if team_id %}
+    <p>Ticket {{ ticket_id }} has been assigned to team {{ team_id }}.</p>
+    <p>Distance: {{ distance | round(2) }} km</p>
+    {% else %}
+    <p>No available team could be assigned to ticket {{ ticket_id }}.</p>
+    {% endif %}
+
+    <a href="{{ url_for('home') }}">Go back</a>
+</body>
+</html>

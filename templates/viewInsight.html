@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Incident Summary</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #364f5a, #0977a7);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #007bff;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .summary-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 30px 40px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .summary-container h2 {
+            margin-bottom: 25px;
+            color: #0977a7;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        th, td {
+            padding: 14px 20px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #0977a7;
+            color: white;
+            font-size: 1rem;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #e0f7ff;
+            cursor: pointer;
+        }
+
+        td {
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CIRS</h1>
+        <nav>
+            <ul>
+                <li><a href="/dashboard">Go Back To Dashboard</a></li>
+                <li><a href="/viewReports.html">View Reports</a></li>
+                <li><a href="/logout.html">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        <div class="summary-container">
+            <h2>Incident Summary by Status</h2>
+            <table>
+                <tr>
+                    <th>Status</th>
+                    <th>Count</th>
+                </tr>
+                {% for row in summary %}
+                <tr>
+                    <td>{{ row.status }}</td>
+                    <td>{{ row.count }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            <form method="POST" action="{{ url_for('download_insights') }}">
+    <button type="submit">Download PDF</button>
+</form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maintenance Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary-color: #007bff;
+      --bg-color: #ffffff;
+      --text-color: #333;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 220px;
+      background-color: #f8f9fa;
+      border-right: 1px solid #ddd;
+      padding: 30px 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      box-shadow: var(--shadow);
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+    }
+
+    .sidebar h2 {
+      font-size: 20px;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+      width: 100%;
+    }
+
+    .sidebar nav ul li {
+      margin-bottom: 15px;
+    }
+
+    .sidebar nav ul li a {
+      text-decoration: none;
+      color: var(--text-color);
+      font-weight: 500;
+      padding: 10px 15px;
+      display: block;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+
+    .sidebar nav ul li a:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .profile-container {
+      margin-top: auto;
+      width: 100%;
+    }
+
+    .profile-button {
+      background: var(--primary-color);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      font-size: 18px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .profile-dropdown {
+      display: none;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      position: absolute;
+      left: 230px;
+      bottom: 70px;
+      z-index: 10;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .profile-container:hover .profile-dropdown {
+      display: block;
+    }
+
+    .profile-dropdown a {
+      padding: 10px 15px;
+      display: block;
+      color: var(--text-color);
+      text-decoration: none;
+    }
+
+    .profile-dropdown a:hover {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .main {
+      flex: 1;
+      padding: 30px;
+      padding-left: 250px; /* Space for sidebar */
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      margin-bottom: 15px;
+      color: var(--primary-color);
+    }
+
+    .card ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .card li {
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .card li:last-child {
+      border-bottom: none;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 250px;
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 10px;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .main {
+        padding: 20px 10px;
+        padding-top: 100px;
+      }
+
+      .profile-container {
+        margin: 0;
+      }
+
+      .profile-dropdown {
+        left: auto;
+        top: 50px;
+      }
+    }
+  </style>
+</head>
+<body>
+    {% if session.get('id') %}
+    <script src="{{ url_for('static', filename='/js/location_updater.js') }}"></script>
+    {% endif %}
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <h2>CIRS</h2>
+        <nav>
+            <ul>
+                <li><a href="/issuedReports.html">Issued Reports</a></li>
+                <li><a href="/ticket_updater.html">assigned tickets</a></li>
+                <li><a href="/personelClosed">closed tickets</a></li>
+                <li><a href="/profile.html">Account</a></li>
+                <li><a href="/logout.html">Logout</a></li>
+            </ul>
+        </nav>
+
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <h1>Welcome, Maintenance Personnel👷‍♂️</h1>
+        <div class="grid">
+            <div class="card">
+                <h3>Recent Tickets</h3>
+                <ul>
+                    {% for ticket in recent_tickets %}
+                    <li>
+                        <form action="{{ url_for('view_a_report') }}" method="POST" style="display:inline;">
+                            📝 {{ ticket.incident_type or 'Unknown Type' }} - {{ ticket.location or 'Unknown Location' }}<br>
+                            <small>Created: {{ ticket.created_at.strftime('%b %d, %Y %H:%M') }}</small>
+                            <input type="hidden" name="incident_id" value="{{ ticket.incident_id }}">
+                            <button type="submit" style="background-color:cadetblue; color:white; border:none; padding:5px 10px; border-radius:5px;">View</button>
+                        </form>
+
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+
+            <div class="card">
+                <h3>Notices</h3>
+                <ul>
+                    <li>⚠️ Storm Alert - Apr 18</li>
+                    <li>🧰 Toolbox Audit - Apr 20</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Workload Overview</h3>
+                <div class="chart-container">
+                    <canvas id="workloadChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Recent Completions</h3>
+                <ul>
+                    {% for ticket in recent_tickets %}
+                    {%if ticket.status == 'closed'%}
+                    <li>✔️ {{ ticket.ticket_id }} - {{ ticket.incident_type }} ({{ ticket.created_at.strftime('%b %d') }})</li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart Script -->
+    <script>
+  const chartLabels = {{ tickets_by_date.keys()|list|tojson }};
+  const chartData = {{ tickets_by_date.values()|list|tojson }};
+
+  const ctx = document.getElementById('workloadChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: chartLabels,
+      datasets: [{
+        label: 'Tickets Reported',
+        data: chartData,
+        backgroundColor: '#007bff'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+
+
+    </script>
+
+
+</body>
+</html>

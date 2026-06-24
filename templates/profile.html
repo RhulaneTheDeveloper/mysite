@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Profile - CIRS</title>
+  <style>
+    :root {
+      --primary: #007bff;
+      --primary-dark: #0056b3;
+      --danger: #dc3545;
+      --danger-dark: #a71d2a;
+      --background: #f0f2f5;
+      --card-bg: #ffffff;
+      --sidebar-bg: rgba(255, 255, 255, 0.95);
+      --text-dark: #333;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      min-height: 100vh;
+      background: linear-gradient(to right, #364f5a, #0977a7);
+    }
+
+    .sidebar {
+      width: 250px;
+      background: var(--sidebar-bg);
+      padding: 30px 20px;
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar h2 {
+      font-size: 22px;
+      margin-bottom: 25px;
+      color: var(--primary);
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar ul li {
+      margin: 18px 0;
+    }
+
+    .sidebar ul li a {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    .sidebar ul li a:hover {
+      color: var(--primary);
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 40px;
+      color: var(--text-dark);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .profile-container {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .user-info,
+    .update-form {
+      width: 100%;
+    }
+
+    .user-info h2,
+    .update-form h2 {
+      margin-bottom: 20px;
+      color: var(--primary-dark);
+    }
+
+    .user-info p {
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #fff;
+      outline: none;
+    }
+
+    .form-group label {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: white;
+      padding: 0 5px;
+      color: #888;
+      transition: 0.2s ease;
+      pointer-events: none;
+    }
+
+    .form-group input:focus + label,
+    .form-group input:not(:placeholder-shown) + label {
+      top: -10px;
+      left: 10px;
+      font-size: 12px;
+      color: var(--primary);
+    }
+
+    .form-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: var(--danger-dark);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        box-shadow: none;
+        padding: 20px;
+      }
+
+      .main-content {
+        padding: 20px;
+      }
+
+      .form-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>Account</h2>
+    <ul>
+      <li><a href="/dashboard">Back to Dashboard</a></li>
+      <li><a href="/logout.html">Log Out</a></li>
+    </ul>
+  </div>
+
+  <!-- Profile Main Area -->
+  <div class="main-content">
+    <div class="profile-container">
+
+      <!-- User Info -->
+      <div class="user-info">
+        <h2>User Info</h2>
+        <p><strong>Full Names:</strong> {{ session['profile']['full_names'] }}</p>
+        <p><strong>Phone Number:</strong> {{ session['profile']['phone_number'] }}</p>
+        <p><strong>Email:</strong> {{ session['profile']['email'] }}</p>
+      </div>
+
+      <!-- Update Form -->
+      <div class="update-form">
+        <h2>Update Your Info</h2>
+        <form id="updateForm" action="/profile.html" method="POST" onsubmit="return validateForm()">
+          <div class="form-group">
+            <input type="text" name="full_names" id="full_names" value="{{ session['profile']['full_names'] }}" placeholder=" " required>
+            <label for="full_names">Full Names</label>
+          </div>
+          <div class="form-group">
+            <input type="tel" name="phone_number" id="phone_number" value="{{ session['profile']['phone_number'] }}" placeholder=" " required>
+            <label for="phone_number">Phone Number</label>
+          </div>
+
+          <div class="form-buttons">
+            <button type="submit" class="btn-primary">Update Profile</button>
+            <button type="submit" class="btn-danger"
+              formaction="{{ url_for('delete_profile_route') }}"
+              formmethod="POST"
+              onclick="return confirm('Are you sure you want to delete your profile?');">
+              Delete My Profile
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Validate form inputs
+    function validateForm() {
+      const fullName = document.getElementById('full_names');
+      const phone = document.getElementById('phone_number');
+      const email = document.getElementById('email');
+
+      // Check if any field is empty
+      if (!fullName.value || !phone.value || !email.value) {
+        alert("Please fill in all fields.");
+        return false; // prevent form submission
+      }
+
+      // Phone number validation (should be digits only, and 10-15 digits long)
+      const phonePattern = /^[0-9]{10,15}$/;
+      if (!phonePattern.test(phone.value)) {
+        alert("Please enter a valid phone number (10-15 digits).");
+        return false; // prevent form submission
+      }
+
+      // Basic email validation
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(email.value)) {
+        alert("Please enter a valid email address.");
+        return false; // prevent form submission
+      }
+
+      return true; // if everything is fine, submit form
+    }
+  </script>
+
+</body>
+</html>

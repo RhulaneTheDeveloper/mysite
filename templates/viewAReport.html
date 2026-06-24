@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Geolocation</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+
+    <style>
+        /* Root Variables for easy color changes */
+        :root {
+            --primary-color: #007bff;
+            --hover-color: #0056b3;
+            --danger-color: #dc3545;
+            --danger-hover: #a71d2a;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #333;
+            --map-height: 400px;
+            --btn-padding: 12px 18px;
+            --font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        /* Map Styling */
+        #map {
+            width: 100%;
+            height: var(--map-height);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Delete Button Styling */
+        .delete-btn {
+            padding: var(--btn-padding);
+            background-color: var(--danger-color);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background-color: var(--danger-hover);
+        }
+
+        /* Back Button Styling */
+        .back-btn {
+            padding: var(--btn-padding);
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 24px;
+            }
+
+            #map {
+                height: 300px;
+            }
+
+            .delete-btn,
+            .back-btn {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2>Incident Location</h2>
+    <div id="map"></div>
+
+    <!-- Back Button -->
+    <button class="back-btn" onclick="goBack()">Back</button>
+
+    <!-- Delete Report Button -->
+    <button class="delete-btn" onclick="confirmDeletion()">Delete Report</button>
+
+    <form action="/comments" >
+
+    <button type="submit" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px;">
+        💬 Leave a Comment
+    </button>
+</form>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.min.js"></script>
+
+    <script>
+        var map = L.map('map').setView([0, 0], 2);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        {% if report.lat is not none and report.lon is not none %}
+            const reportLat = {{ report.lat|tojson }};
+            const reportLon = {{ report.lon|tojson }};
+            const reportLocation = L.latLng(reportLat, reportLon);
+
+            const redIcon = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                shadowUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            L.marker(reportLocation, { icon: redIcon }).addTo(map)
+                .bindPopup("Incident Location")
+                .openPopup();
+
+            map.setView(reportLocation, 14);
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const userLat = position.coords.latitude;
+                    const userLon = position.coords.longitude;
+                    const userLocation = L.latLng(userLat, userLon);
+
+                    L.marker(userLocation).addTo(map)
+                        .bindPopup("You are here!");
+
+                    // Show the route
+                    L.Routing.control({
+                        waypoints: [
+                            userLocation,
+                            reportLocation
+                        ],
+                        routeWhileDragging: false,
+                        show: false,
+                        addWaypoints: false
+                    }).addTo(map);
+                }, function (error) {
+                    console.error("Geolocation error:", error.message);
+                });
+            }
+        {% endif %}
+
+        // Confirm deletion function
+        function confirmDeletion() {
+            const confirmation = confirm("Are you sure you want to delete this report?");
+            if (confirmation) {
+                // Redirect to the route that handles report deletion
+                // Assuming the URL for deleting the report is '/delete-report'
+                window.location.href = '/delete-report';  // Change the URL as needed
+            } else {
+                console.log("Report deletion canceled");
+            }
+        }
+
+        // Back button function
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>
