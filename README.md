@@ -1,4 +1,4 @@
-# 🚀 Project Name (e.g., Incident Tracker or Ticket System)
+# 🚀 Community Infrastructure Reporting System (CIRS)
 
 A short, one-to-two sentence summary explaining what problem your application solves and who it is built for.
 
